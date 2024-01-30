@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	extpatch "github.com/ogame-ninja/extension-patcher"
+	ep "github.com/ogame-ninja/extension-patcher"
 )
 
 func main() {
@@ -14,24 +14,24 @@ func main() {
 		infinity_2_3_9_sha256 = "315738d9184062db0e42deddf6ab64268b4f7c522484892cf0abddf0560f6bcd"
 	)
 
-	files := []extpatch.FileAndProcessor{
-		{FileName: "/manifest.json", ProcessorFn: processManifest},
-		{FileName: "/ctxcontent/index.js", ProcessorFn: processCtXContextIndexJS},
-		{FileName: "/ctxcontent/data-helper.js", ProcessorFn: processDataHelperJS},
-		{FileName: "/ctxcontent/helpers/universe.alliances.js", ProcessorFn: processHelpersUniverseAlliancesJS},
-		{FileName: "/ctxcontent/helpers/universe.players.js", ProcessorFn: processHelpersUniversePlayersJS},
-		{FileName: "/ctxcontent/helpers/universe.planets.js", ProcessorFn: processHelpersUniversePlanetsJS},
-		{FileName: "/ctxcontent/helpers/universe.highscore.js", ProcessorFn: processHelpersUniverseHighscoreJS},
-		{FileName: "/ctxcontent/services/request.ogameAlliances.js", ProcessorFn: processServiceOgameAlliancesJS},
-		{FileName: "/ctxcontent/services/request.ogamePlayers.js", ProcessorFn: processServiceOgamePlayersJS},
-		{FileName: "/ctxcontent/services/request.ogamePlanets.js", ProcessorFn: processServiceOgamePlanetsJS},
-		{FileName: "/ctxcontent/services/request.ogameHighscore.js", ProcessorFn: processServiceOgameHighscoreJS},
-		{FileName: "/util/numbers.js", ProcessorFn: processUtilNumbersJS},
-		{FileName: "/ogkush.js", ProcessorFn: processOgkushJS},
-		{FileName: "/background.js", ProcessorFn: processBackgroundJS},
+	files := []ep.FileAndProcessors{
+		ep.NewFile("/manifest.json", processManifest),
+		ep.NewFile("/ctxcontent/index.js", processCtXContextIndexJS),
+		ep.NewFile("/ctxcontent/data-helper.js", processDataHelperJS),
+		ep.NewFile("/ctxcontent/helpers/universe.alliances.js", processHelpersUniverseAlliancesJS),
+		ep.NewFile("/ctxcontent/helpers/universe.players.js", processHelpersUniversePlayersJS),
+		ep.NewFile("/ctxcontent/helpers/universe.planets.js", processHelpersUniversePlanetsJS),
+		ep.NewFile("/ctxcontent/helpers/universe.highscore.js", processHelpersUniverseHighscoreJS),
+		ep.NewFile("/ctxcontent/services/request.ogameAlliances.js", processServiceOgameAlliancesJS),
+		ep.NewFile("/ctxcontent/services/request.ogamePlayers.js", processServiceOgamePlayersJS),
+		ep.NewFile("/ctxcontent/services/request.ogamePlanets.js", processServiceOgamePlanetsJS),
+		ep.NewFile("/ctxcontent/services/request.ogameHighscore.js", processServiceOgameHighscoreJS),
+		ep.NewFile("/util/numbers.js", processUtilNumbersJS),
+		ep.NewFile("/ogkush.js", processOgkushJS),
+		ep.NewFile("/background.js", processBackgroundJS),
 	}
 
-	p, err := extpatch.New(extpatch.Params{
+	p, err := ep.New(ep.Params{
 		ExtensionName:  extensionName,
 		ExpectedSha256: infinity_2_3_9_sha256,
 		WebstoreURL:    webstoreURL,
@@ -43,7 +43,7 @@ func main() {
 	p.Start()
 }
 
-var replN = extpatch.MustReplaceN
+var replN = ep.MustReplaceN
 
 type Manifest struct {
 	Action struct {
