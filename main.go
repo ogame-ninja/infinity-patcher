@@ -9,9 +9,9 @@ import (
 
 func main() {
 	const (
-		infinity_2_3_9_sha256 = "315738d9184062db0e42deddf6ab64268b4f7c522484892cf0abddf0560f6bcd"
 		extensionName         = "infinity"
 		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
+		infinity_2_3_9_sha256 = "315738d9184062db0e42deddf6ab64268b4f7c522484892cf0abddf0560f6bcd"
 	)
 
 	files := []extpatch.FileAndProcessor{
