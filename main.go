@@ -31,12 +31,16 @@ func main() {
 		{FileName: "/background.js", ProcessorFn: processBackgroundJS},
 	}
 
-	extpatch.Start(extpatch.Params{
+	p, err := extpatch.New(extpatch.Params{
 		ExtensionName:  extensionName,
 		ExpectedSha256: infinity_2_3_9_sha256,
 		WebstoreURL:    webstoreURL,
 		Files:          files,
 	})
+	if err != nil {
+		panic(err)
+	}
+	p.Start()
 }
 
 var replN = extpatch.MustReplaceN
