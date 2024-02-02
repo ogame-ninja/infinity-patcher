@@ -26,7 +26,6 @@ func main() {
 		ep.NewFile("/ctxcontent/services/request.ogamePlayers.js", processServiceOgamePlayersJS),
 		ep.NewFile("/ctxcontent/services/request.ogamePlanets.js", processServiceOgamePlanetsJS),
 		ep.NewFile("/ctxcontent/services/request.ogameHighscore.js", processServiceOgameHighscoreJS),
-		ep.NewFile("/util/numbers.js", processUtilNumbersJS),
 		ep.NewFile("/ogkush.js", processOgkushJS),
 		ep.NewFile("/background.js", processBackgroundJS),
 	}
@@ -172,11 +171,6 @@ func processServiceOgameHighscoreJS(by []byte) []byte {
 	by = replN(by, `function requestOGameHighScore(universe,category,type)`, `function requestOGameHighScore(protocol, host, universe, category, type, universeNum, universeLang)`, 1)
 	by = replN(by, `https://${universe}.ogame.gameforge.com/api/highscore.xml`,
 		`${protocol}//${host}/api/s${universeNum}/${universeLang}/highscore.xml`, 1)
-	return by
-}
-
-func processUtilNumbersJS(by []byte) []byte {
-	by = replN(by, `document.querySelector("#cookiebanner").getAttribute("data-locale")`, `"en-GB"`, 2)
 	return by
 }
 
