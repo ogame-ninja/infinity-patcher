@@ -11,7 +11,7 @@ func main() {
 	const (
 		extensionName         = "infinity"
 		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
-		infinity_2_4_1_sha256 = "c85ae5b3b1ca637e979fc87ca020d533004252700c177bc8ea02e10dfbde0259"
+		infinity_2_4_3_sha256 = "b17dca8e6f4a36d161e1b82269a5e958b5d8bd27f515b28972e3c27497eea552"
 	)
 
 	files := []ep.FileAndProcessors{
@@ -32,7 +32,7 @@ func main() {
 
 	p, err := ep.New(ep.Params{
 		ExtensionName:  extensionName,
-		ExpectedSha256: infinity_2_4_1_sha256,
+		ExpectedSha256: infinity_2_4_3_sha256,
 		WebstoreURL:    webstoreURL,
 		Files:          files,
 	})
@@ -184,7 +184,7 @@ const localStoragePrefix = UNIVERSE + "-" + PLAYER_ID + "-";`), by...)
 	by = replN(by, `localStorage.setItem(`, `localStorage.setItem(localStoragePrefix+`, 6)
 	by = replN(by, `window.location.host.replace(/\D/g,"");`, `universeNum;`, 1)
 	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/api/serverData.xml`, `/api/s${universeNum}/${lang}/serverData.xml`, 1)
-	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/game/index.php`, ``, 16)
+	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/game/index.php`, ``, 17)
 	by = replN(by, `;for(var x in localStorage){`, `;for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}`, 1)
 	by = replN(by, `purgeLocalStorage(){for(var x in localStorage){if(x!="ogk-data"){`, `purgeLocalStorage(){for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}if(x!=localStoragePrefix+"ogk-data"){`, 1)
 	by = replN(by, `document.location.origin+"/game/index.php`, `"`, 2)
