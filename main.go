@@ -11,7 +11,7 @@ func main() {
 	const (
 		extensionName         = "infinity"
 		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
-		infinity_2_4_3_sha256 = "b17dca8e6f4a36d161e1b82269a5e958b5d8bd27f515b28972e3c27497eea552"
+		infinity_2_4_3_sha256 = "71b6be15a7733563b92ff6834df4f902db2a706fb7f2aaea8c042bd686fb20ce"
 	)
 
 	files := []ep.FileAndProcessors{
