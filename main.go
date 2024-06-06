@@ -9,9 +9,9 @@ import (
 
 func main() {
 	const (
-		extensionName         = "infinity"
-		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
-		infinity_2_4_3_sha256 = "71b6be15a7733563b92ff6834df4f902db2a706fb7f2aaea8c042bd686fb20ce"
+		extensionName   = "infinity"
+		webstoreURL     = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
+		infinity_sha256 = "6c1fae457386cb68ca94fc3332568178be17bcaf35471dacd71b77492e61baed"
 	)
 
 	files := []ep.FileAndProcessors{
@@ -32,7 +32,7 @@ func main() {
 
 	p, err := ep.New(ep.Params{
 		ExtensionName:  extensionName,
-		ExpectedSha256: infinity_2_4_3_sha256,
+		ExpectedSha256: infinity_sha256,
 		WebstoreURL:    webstoreURL,
 		Files:          files,
 	})
@@ -180,17 +180,17 @@ const lang = /browser\/html\/s(\d+)-(\w+)/.exec(window.location.href)[2];
 const UNIVERSE = "s" + universeNum + "-" + lang;
 const PLAYER_ID = document.querySelector("meta[name=ogame-player-id]").content;
 const localStoragePrefix = UNIVERSE + "-" + PLAYER_ID + "-";`), by...)
-	by = replN(by, `localStorage.getItem(`, `localStorage.getItem(localStoragePrefix+`, 2)
-	by = replN(by, `localStorage.setItem(`, `localStorage.setItem(localStoragePrefix+`, 6)
+	by = replN(by, `localStorage.getItem(`, `localStorage.getItem(localStoragePrefix+`, 1)
+	by = replN(by, `localStorage.setItem(`, `localStorage.setItem(localStoragePrefix+`, 5)
 	by = replN(by, `window.location.host.replace(/\D/g,"");`, `universeNum;`, 1)
 	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/api/serverData.xml`, `/api/s${universeNum}/${lang}/serverData.xml`, 1)
-	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/game/index.php`, ``, 17)
+	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/game/index.php`, ``, 13)
 	by = replN(by, `;for(var x in localStorage){`, `;for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}`, 1)
 	by = replN(by, `purgeLocalStorage(){for(var x in localStorage){if(x!="ogk-data"){`, `purgeLocalStorage(){for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}if(x!=localStoragePrefix+"ogk-data"){`, 1)
 	by = replN(by, `document.location.origin+"/game/index.php`, `"`, 2)
 	by = replN(by, "`/game/index.php?", "`?", 2)
 	by = replN(by, `"/game/index.php?`, `"?`, 1)
-	by = replN(by, `"https://"+window.location.host+window.location.pathname+`, ``, 14)
+	by = replN(by, `"https://"+window.location.host+window.location.pathname+`, ``, 11)
 	return by
 }
 
