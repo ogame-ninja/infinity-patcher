@@ -9,9 +9,9 @@ import (
 
 func main() {
 	const (
-		extensionName   = "infinity"
-		webstoreURL     = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
-		infinity_sha256 = "6c1fae457386cb68ca94fc3332568178be17bcaf35471dacd71b77492e61baed"
+		extensionName         = "infinity"
+		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
+		infinity_2_4_8_sha256 = "ae109e06fe90c2bf2c85929260fd4bf69b82a37075e844ad9ac16dfe21f1f66a"
 	)
 
 	files := []ep.FileAndProcessors{
@@ -32,7 +32,7 @@ func main() {
 
 	p, err := ep.New(ep.Params{
 		ExtensionName:  extensionName,
-		ExpectedSha256: infinity_sha256,
+		ExpectedSha256: infinity_2_4_8_sha256,
 		WebstoreURL:    webstoreURL,
 		Files:          files,
 	})
@@ -184,13 +184,13 @@ const localStoragePrefix = UNIVERSE + "-" + PLAYER_ID + "-";`), by...)
 	by = replN(by, `localStorage.setItem(`, `localStorage.setItem(localStoragePrefix+`, 5)
 	by = replN(by, `window.location.host.replace(/\D/g,"");`, `universeNum;`, 1)
 	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/api/serverData.xml`, `/api/s${universeNum}/${lang}/serverData.xml`, 1)
-	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/game/index.php`, ``, 13)
+	by = replN(by, `https://s${this.universe}-${this.gameLang}.ogame.gameforge.com/game/index.php`, ``, 9)
 	by = replN(by, `;for(var x in localStorage){`, `;for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}`, 1)
 	by = replN(by, `purgeLocalStorage(){for(var x in localStorage){if(x!="ogk-data"){`, `purgeLocalStorage(){for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}if(x!=localStoragePrefix+"ogk-data"){`, 1)
 	by = replN(by, `document.location.origin+"/game/index.php`, `"`, 2)
 	by = replN(by, "`/game/index.php?", "`?", 2)
 	by = replN(by, `"/game/index.php?`, `"?`, 1)
-	by = replN(by, `"https://"+window.location.host+window.location.pathname+`, ``, 11)
+	by = replN(by, `"https://"+window.location.host+window.location.pathname+`, ``, 10)
 	return by
 }
 
