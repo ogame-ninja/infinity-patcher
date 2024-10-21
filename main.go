@@ -11,7 +11,7 @@ func main() {
 	const (
 		extensionName         = "infinity"
 		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
-		infinity_2_4_9_sha256 = "d8fdc5b42c70ebe2577347cec9b51e5677a6108c8bd728b1b1abc887f23f7a93"
+		infinity_2_5_0_sha256 = "daa70a10993992f49c42b24aa5d74bbdefd41bddc3f90c4d3a4b3bfc7be855ac"
 	)
 
 	files := []ep.FileAndProcessors{
@@ -32,7 +32,7 @@ func main() {
 
 	p, err := ep.New(ep.Params{
 		ExtensionName:  extensionName,
-		ExpectedSha256: infinity_2_4_9_sha256,
+		ExpectedSha256: infinity_2_5_0_sha256,
 		WebstoreURL:    webstoreURL,
 		Files:          files,
 	})
