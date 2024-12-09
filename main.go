@@ -10,8 +10,8 @@ import (
 func main() {
 	const (
 		extensionName         = "infinity"
-		webstoreURL           = "https://chrome.google.com/webstore/detail/ogame-infinity/hfojakphgokgpbnejoobfamojbgolcbo"
-		infinity_2_5_0_sha256 = "daa70a10993992f49c42b24aa5d74bbdefd41bddc3f90c4d3a4b3bfc7be855ac"
+		webstoreURL           = "https://addons.mozilla.org/en-US/firefox/addon/ogame-infinity"
+		infinity_2_5_1_sha256 = "b62c9abd2b60c6447f4bbbcc00066bae82b76308ca9ac4990c3f448b5b6dc83c"
 	)
 
 	files := []ep.FileAndProcessors{
@@ -32,7 +32,7 @@ func main() {
 
 	p, err := ep.New(ep.Params{
 		ExtensionName:  extensionName,
-		ExpectedSha256: infinity_2_5_0_sha256,
+		ExpectedSha256: infinity_2_5_1_sha256,
 		WebstoreURL:    webstoreURL,
 		Files:          files,
 	})
@@ -74,11 +74,7 @@ type Manifest struct {
 	Permissions            []string `json:"permissions"`
 	UpdateURL              string   `json:"update_url"`
 	Version                string   `json:"version"`
-	WebAccessibleResources []struct {
-		ExtensionIds []string `json:"extension_ids"`
-		Matches      []string `json:"matches"`
-		Resources    []string `json:"resources"`
-	} `json:"web_accessible_resources"`
+	WebAccessibleResources []string `json:"web_accessible_resources"`
 }
 
 func processManifest(by []byte) []byte {
@@ -94,19 +90,19 @@ func processManifest(by []byte) []byte {
 }
 
 func processCtXContextIndexJS(by []byte) []byte {
-	by = replN(by, `const UNIVERSE=window.location.host.split(".")[0];`,
+	by = replN(by, `const UNIVERSE = window.location.host.split(".")[0];`,
 		`const universeNum = /browser\/html\/s(\d+)-(\w+)/.exec(window.location.href)[1];
 const lang = /browser\/html\/s(\d+)-(\w+)/.exec(window.location.href)[2];
 const UNIVERSE = "s" + universeNum + "-" + lang;
 const PROTOCOL = window.location.protocol;
 const HOST = window.location.host;`, 1)
-	by = replN(by, `universe:UNIVERSE`, `protocol:window.location.protocol,host:window.location.host,universe: UNIVERSE`, 1)
+	by = replN(by, `universe: UNIVERSE`, `protocol:window.location.protocol,host:window.location.host,universe: UNIVERSE`, 1)
 	by = replN(by, `new DataHelper(UNIVERSE)`, `new DataHelper(PROTOCOL, HOST, UNIVERSE)`, 2)
 	return by
 }
 
 func processDataHelperJS(by []byte) []byte {
-	by = replN(by, `constructor(universe){`,
+	by = replN(by, `constructor(universe) {`,
 		`constructor(protocol,host,universe){
 this.protocol=protocol;
 this.host=host;
@@ -138,11 +134,11 @@ func processHelpersUniversePlanetsJS(by []byte) []byte {
 }
 
 func processHelpersUniverseHighscoreJS(by []byte) []byte {
-	by = replN(by, `function requestHighscore(universe,category)`, `function requestHighscore(protocol, host, universe, category, universeNum, universeLang)`, 1)
+	by = replN(by, `function requestHighscore(universe, category)`, `function requestHighscore(protocol, host, universe, category, universeNum, universeLang)`, 1)
 	by = replN(by, `getPlayersHighscore(universe)`, `getPlayersHighscore(protocol, host, universe, universeNum, universeLang)`, 1)
-	by = replN(by, `requestHighscore(universe,HIGHSCORE_CATEGORY.PLAYER)`, `requestHighscore(protocol, host, universe, HIGHSCORE_CATEGORY.PLAYER, universeNum, universeLang)`, 1)
-	by = replN(by, `requestHighscore(universe,HIGHSCORE_CATEGORY.ALLIANCE)`, `requestHighscore(protocol, host, universe, HIGHSCORE_CATEGORY.ALLIANCE, universeNum, universeLang)`, 1)
-	by = replN(by, `requestOGameHighScore(universe,category,type)`, `requestOGameHighScore(protocol, host, universe, category, type, universeNum, universeLang)`, 1)
+	by = replN(by, `requestHighscore(universe, HIGHSCORE_CATEGORY.PLAYER)`, `requestHighscore(protocol, host, universe, HIGHSCORE_CATEGORY.PLAYER, universeNum, universeLang)`, 1)
+	by = replN(by, `requestHighscore(universe, HIGHSCORE_CATEGORY.ALLIANCE)`, `requestHighscore(protocol, host, universe, HIGHSCORE_CATEGORY.ALLIANCE, universeNum, universeLang)`, 1)
+	by = replN(by, `requestOGameHighScore(universe, category, type)`, `requestOGameHighScore(protocol, host, universe, category, type, universeNum, universeLang)`, 1)
 	return by
 }
 
@@ -168,7 +164,7 @@ func processServiceOgamePlanetsJS(by []byte) []byte {
 }
 
 func processServiceOgameHighscoreJS(by []byte) []byte {
-	by = replN(by, `function requestOGameHighScore(universe,category,type)`, `function requestOGameHighScore(protocol, host, universe, category, type, universeNum, universeLang)`, 1)
+	by = replN(by, `function requestOGameHighScore(universe, category, type)`, `function requestOGameHighScore(protocol, host, universe, category, type, universeNum, universeLang)`, 1)
 	by = replN(by, `https://${universe}.ogame.gameforge.com/api/highscore.xml`,
 		`${protocol}//${host}/api/s${universeNum}/${universeLang}/highscore.xml`, 1)
 	return by
@@ -182,15 +178,27 @@ const PLAYER_ID = document.querySelector("meta[name=ogame-player-id]").content;
 const localStoragePrefix = UNIVERSE + "-" + PLAYER_ID + "-";`), by...)
 	by = replN(by, `localStorage.getItem(`, `localStorage.getItem(localStoragePrefix+`, 1)
 	by = replN(by, `localStorage.setItem(`, `localStorage.setItem(localStoragePrefix+`, 5)
-	by = replN(by, `window.location.host.replace(/\D/g,"");`, `universeNum;`, 1)
+	by = replN(by, `window.location.host.replace(/\D/g, "");`, `universeNum;`, 1)
 	by = replN(by, `https://s${this.universe}-${OgamePageData.gameLang}.ogame.gameforge.com/api/serverData.xml`, `/api/s${universeNum}/${lang}/serverData.xml`, 1)
-	by = replN(by, `https://s${this.universe}-${OgamePageData.gameLang}.ogame.gameforge.com/game/index.php`, ``, 6)
-	by = replN(by, `;for(var x in localStorage){`, `;for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}`, 1)
-	by = replN(by, `purgeLocalStorage(){for(var x in localStorage){if(x!="ogk-data"){`, `purgeLocalStorage(){for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}if(x!=localStoragePrefix+"ogk-data"){`, 1)
-	by = replN(by, `document.location.origin+"/game/index.php`, `"`, 2)
+	by = replN(by, `https://s${this.universe}-${OgamePageData.gameLang}.ogame.gameforge.com/game/index.php`, ``, 5)
+	by = replN(by, `href="https://s${this.universe}-${
+        OgamePageData.gameLang
+      }.ogame.gameforge.com/game/index.php`, ``, 1)
+	by = replN(by, `;
+    for (var x in localStorage) {`, `;for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}`, 1)
+	by = replN(by, `purgeLocalStorage() {
+    for (var x in localStorage) {
+      if (x != "ogk-data") {`, `purgeLocalStorage(){for(var x in localStorage){if(!x.startsWith(localStoragePrefix)){continue;}if(x!=localStoragePrefix+"ogk-data"){`, 1)
+	by = replN(by, `document.location.origin + "/game/index.php`, `"`, 2)
 	by = replN(by, "`/game/index.php?", "`?", 2)
 	by = replN(by, `"/game/index.php?`, `"?`, 1)
-	by = replN(by, `"https://"+window.location.host+window.location.pathname+`, ``, 10)
+	by = replN(by, `"https://" +
+          window.location.host +
+          window.location.pathname +`, ``, 1)
+	by = replN(by, `"https://" +
+                window.location.host +
+                window.location.pathname +`, ``, 2)
+	by = replN(by, `"https://" + window.location.host + window.location.pathname + `, ``, 7)
 	return by
 }
 
