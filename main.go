@@ -11,7 +11,7 @@ func main() {
 	ep.MustNew(ep.Params{
 		ExtensionName:  "infinity",
 		ExpectedSha256: "b62c9abd2b60c6447f4bbbcc00066bae82b76308ca9ac4990c3f448b5b6dc83c",
-		WebstoreURL:    "https://addons.mozilla.org/en-US/firefox/addon/ogame-infinity",
+		Uri:            "https://addons.mozilla.org/en-US/firefox/addon/ogame-infinity",
 		Files: []ep.FileAndProcessors{
 			ep.NewFile("/manifest.json", processManifest),
 			ep.NewFile("/ctxcontent/index.js", processCtXContextIndexJS),
