@@ -45,36 +45,40 @@ func main() {
 var replN = ep.MustReplaceN
 
 type Manifest struct {
-	Action struct {
-		DefaultIcon struct {
-			Num32 string `json:"32"`
-		} `json:"default_icon"`
-		DefaultTitle string `json:"default_title"`
-	} `json:"action"`
-	Background struct {
-		ServiceWorker string `json:"service_worker"`
-	} `json:"background"`
-	ContentScripts []struct {
-		CSS            []string `json:"css"`
+	Name            string `json:"name"`
+	Version         string `json:"version"`
+	ManifestVersion int    `json:"manifest_version"`
+	Description     string `json:"description"`
+	HomepageURL     string `json:"homepage_url"`
+	ContentScripts  []struct {
 		ExcludeMatches []string `json:"exclude_matches"`
-		Js             []string `json:"js"`
 		Matches        []string `json:"matches"`
+		Js             []string `json:"js"`
+		CSS            []string `json:"css"`
 		RunAt          string   `json:"run_at"`
 	} `json:"content_scripts"`
-	Description     string   `json:"description"`
-	HostPermissions []string `json:"host_permissions"`
-	Icons           struct {
+	WebAccessibleResources []string `json:"web_accessible_resources"`
+	BrowserAction          struct {
+		DefaultTitle string `json:"default_title"`
+		DefaultIcon  struct {
+			Num32 string `json:"32"`
+		} `json:"default_icon"`
+	} `json:"browser_action"`
+	Icons struct {
 		Num32  string `json:"32"`
 		Num128 string `json:"128"`
 		Num256 string `json:"256"`
 		Num512 string `json:"512"`
 	} `json:"icons"`
-	ManifestVersion        int      `json:"manifest_version"`
-	Name                   string   `json:"name"`
-	Permissions            []string `json:"permissions"`
-	UpdateURL              string   `json:"update_url"`
-	Version                string   `json:"version"`
-	WebAccessibleResources []string `json:"web_accessible_resources"`
+	Permissions []string `json:"permissions"`
+	Background  struct {
+		Scripts []string `json:"scripts"`
+	} `json:"background"`
+	BrowserSpecificSettings struct {
+		Gecko struct {
+			ID string `json:"id"`
+		} `json:"gecko"`
+	} `json:"browser_specific_settings"`
 }
 
 func processManifest(by []byte) []byte {
@@ -84,7 +88,7 @@ func processManifest(by []byte) []byte {
 	}
 	data.Name = "Ogame Infinity Ninja"
 	data.ContentScripts[0].Matches = append(data.ContentScripts[0].Matches, "*://*/bots/*/browser/html/*")
-	data.HostPermissions = append(data.HostPermissions, "<all_urls>")
+	data.Permissions = append(data.Permissions, "<all_urls>")
 	out, _ := json.MarshalIndent(data, "", "  ")
 	return out
 }
