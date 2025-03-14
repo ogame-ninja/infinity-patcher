@@ -8,38 +8,26 @@ import (
 )
 
 func main() {
-	const (
-		extensionName         = "infinity"
-		webstoreURL           = "https://addons.mozilla.org/en-US/firefox/addon/ogame-infinity"
-		infinity_2_5_1_sha256 = "b62c9abd2b60c6447f4bbbcc00066bae82b76308ca9ac4990c3f448b5b6dc83c"
-	)
-
-	files := []ep.FileAndProcessors{
-		ep.NewFile("/manifest.json", processManifest),
-		ep.NewFile("/ctxcontent/index.js", processCtXContextIndexJS),
-		ep.NewFile("/ctxcontent/data-helper.js", processDataHelperJS),
-		ep.NewFile("/ctxcontent/helpers/universe.alliances.js", processHelpersUniverseAlliancesJS),
-		ep.NewFile("/ctxcontent/helpers/universe.players.js", processHelpersUniversePlayersJS),
-		ep.NewFile("/ctxcontent/helpers/universe.planets.js", processHelpersUniversePlanetsJS),
-		ep.NewFile("/ctxcontent/helpers/universe.highscore.js", processHelpersUniverseHighscoreJS),
-		ep.NewFile("/ctxcontent/services/request.ogameAlliances.js", processServiceOgameAlliancesJS),
-		ep.NewFile("/ctxcontent/services/request.ogamePlayers.js", processServiceOgamePlayersJS),
-		ep.NewFile("/ctxcontent/services/request.ogamePlanets.js", processServiceOgamePlanetsJS),
-		ep.NewFile("/ctxcontent/services/request.ogameHighscore.js", processServiceOgameHighscoreJS),
-		ep.NewFile("/ogkush.js", processOgkushJS),
-		ep.NewFile("/background.js", processBackgroundJS),
-	}
-
-	p, err := ep.New(ep.Params{
-		ExtensionName:  extensionName,
-		ExpectedSha256: infinity_2_5_1_sha256,
-		WebstoreURL:    webstoreURL,
-		Files:          files,
-	})
-	if err != nil {
-		panic(err)
-	}
-	p.Start()
+	ep.MustNew(ep.Params{
+		ExtensionName:  "infinity",
+		ExpectedSha256: "b62c9abd2b60c6447f4bbbcc00066bae82b76308ca9ac4990c3f448b5b6dc83c",
+		WebstoreURL:    "https://addons.mozilla.org/en-US/firefox/addon/ogame-infinity",
+		Files: []ep.FileAndProcessors{
+			ep.NewFile("/manifest.json", processManifest),
+			ep.NewFile("/ctxcontent/index.js", processCtXContextIndexJS),
+			ep.NewFile("/ctxcontent/data-helper.js", processDataHelperJS),
+			ep.NewFile("/ctxcontent/helpers/universe.alliances.js", processHelpersUniverseAlliancesJS),
+			ep.NewFile("/ctxcontent/helpers/universe.players.js", processHelpersUniversePlayersJS),
+			ep.NewFile("/ctxcontent/helpers/universe.planets.js", processHelpersUniversePlanetsJS),
+			ep.NewFile("/ctxcontent/helpers/universe.highscore.js", processHelpersUniverseHighscoreJS),
+			ep.NewFile("/ctxcontent/services/request.ogameAlliances.js", processServiceOgameAlliancesJS),
+			ep.NewFile("/ctxcontent/services/request.ogamePlayers.js", processServiceOgamePlayersJS),
+			ep.NewFile("/ctxcontent/services/request.ogamePlanets.js", processServiceOgamePlanetsJS),
+			ep.NewFile("/ctxcontent/services/request.ogameHighscore.js", processServiceOgameHighscoreJS),
+			ep.NewFile("/ogkush.js", processOgkushJS),
+			ep.NewFile("/background.js", processBackgroundJS),
+		},
+	}).Start()
 }
 
 var replN = ep.MustReplaceN
